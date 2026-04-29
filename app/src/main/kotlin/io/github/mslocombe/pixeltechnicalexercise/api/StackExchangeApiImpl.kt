@@ -12,9 +12,11 @@ class StackExchangeApiImpl(
 
     private val httpClient = HttpClient(engine)
 
-    override suspend fun getTopUsers(site: String): List<StackOverflowUser> {
+    override suspend fun getTopStackOverflowUsers(): List<StackOverflowUser> {
         return try {
-            val response = httpClient.get(site).bodyAsText()
+            val response =
+                httpClient.get("https://api.stackexchange.com/2.2/users?page=1&pagesize=20&order=desc&sort=reputation&site=stackoverflow")
+                    .bodyAsText()
             val json = JSONObject(response)
             val items = json.getJSONArray("items")
 
@@ -23,7 +25,7 @@ class StackExchangeApiImpl(
                 val thisItem = items.getJSONObject(index)
                 resultList.add(
                     StackOverflowUser(
-                        id = thisItem.getInt("account_id")
+                        name = thisItem.getString("display_name")
                     )
                 )
             }

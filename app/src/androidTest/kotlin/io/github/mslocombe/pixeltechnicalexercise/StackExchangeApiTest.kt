@@ -31,7 +31,7 @@ class StackExchangeApiTest {
 
         val api = StackExchangeApiImpl(mockEngine)
 
-        val users = api.getTopUsers("stackoverflow")
+        val users = api.getTopStackOverflowUsers()
 
         assert(users == emptyList<StackOverflowUser>())
     }
@@ -81,11 +81,11 @@ class StackExchangeApiTest {
 
         val api = StackExchangeApiImpl(mockEngine)
 
-        val users = api.getTopUsers("stackoverflow")
+        val users = api.getTopStackOverflowUsers()
 
         val expected = listOf(
             StackOverflowUser(
-                id = 11683
+                name = "Jon Skeet"
             )
         )
 
@@ -170,13 +170,13 @@ class StackExchangeApiTest {
 
         val api = StackExchangeApiImpl(mockEngine)
 
-        val users = api.getTopUsers("stackoverflow")
+        val users = api.getTopStackOverflowUsers()
 
         val expected = listOf(
             StackOverflowUser(
-                id = 11683
+                name = "Jon Skeet"
             ), StackOverflowUser(
-                id = 4243
+                name = "VonC"
             )
         )
 
@@ -195,7 +195,7 @@ class StackExchangeApiTest {
 
         val api = StackExchangeApiImpl(mockEngine)
 
-        val users = api.getTopUsers("stackoverflow")
+        val users = api.getTopStackOverflowUsers()
 
         assert(users == emptyList<StackOverflowUser>())
     }

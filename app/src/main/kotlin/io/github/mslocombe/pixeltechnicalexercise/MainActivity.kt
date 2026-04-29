@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import io.github.mslocombe.pixeltechnicalexercise.ui.theme.PixelTechnicalExerciseTheme
-import io.github.mslocombe.pixeltechnicalexercise.userlist.UserListView
+import io.github.mslocombe.pixeltechnicalexercise.userlist.UserListScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             PixelTechnicalExerciseTheme {
-                UserListView()
+                UserListScreen()
             }
         }
     }

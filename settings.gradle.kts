@@ -24,4 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Pixel Technical Exercise"
 include(":app")
- 
+include(":app:mocking")
