@@ -25,7 +25,7 @@ class UserListViewModelImpl(
             _cards.update {
                 stackExchangeApi.getTopStackOverflowUsers().map { user ->
                     UserCardState(
-                        "", user.name, 0
+                        "", user.name, user.reputation
                     )
                 }
             }

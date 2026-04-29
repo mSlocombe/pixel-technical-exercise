@@ -1,7 +1,5 @@
-package io.github.mslocombe.pixeltechnicalexercise
+package io.github.mslocombe.pixeltechnicalexercise.api
 
-import io.github.mslocombe.pixeltechnicalexercise.api.StackExchangeApiImpl
-import io.github.mslocombe.pixeltechnicalexercise.api.StackOverflowUser
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpHeaders
@@ -85,7 +83,8 @@ class StackExchangeApiTest {
 
         val expected = listOf(
             StackOverflowUser(
-                name = "Jon Skeet"
+                name = "Jon Skeet",
+                reputation = 1454978
             )
         )
 
@@ -101,7 +100,7 @@ class StackExchangeApiTest {
 
     @Test
     fun apiReturnsManyUserRecords() = runBlocking {
-        val mockEngine = MockEngine { _ ->
+        val mockEngine = MockEngine.Companion { _ ->
             respond(
                 content = ByteReadChannel(
                     """
@@ -174,9 +173,11 @@ class StackExchangeApiTest {
 
         val expected = listOf(
             StackOverflowUser(
-                name = "Jon Skeet"
+                name = "Jon Skeet",
+                reputation = 1526592
             ), StackOverflowUser(
-                name = "VonC"
+                name = "VonC",
+                reputation = 1369486
             )
         )
 

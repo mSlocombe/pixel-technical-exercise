@@ -42,7 +42,7 @@ fun UserListScreen(
                         state = UserCardState(
                             profilePictureUrl = "https://www.gravatar.com/avatar/6d8ebb117e8d83d74ea95fbdd0f87e13?s=256&d=identicon&r=PG",
                             name = thisCard.name,
-                            reputation = 1526592
+                            reputation = thisCard.reputation
                         )
                     )
                 }

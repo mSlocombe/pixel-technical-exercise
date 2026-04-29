@@ -25,7 +25,8 @@ class StackExchangeApiImpl(
                 val thisItem = items.getJSONObject(index)
                 resultList.add(
                     StackOverflowUser(
-                        name = thisItem.getString("display_name")
+                        name = thisItem.getString("display_name"),
+                        reputation = thisItem.getInt("reputation")
                     )
                 )
             }

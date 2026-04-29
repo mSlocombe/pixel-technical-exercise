@@ -16,7 +16,7 @@ class UserListViewModelTest {
     fun stackOverflowUsersTranslatedToUserCards() = runTest {
         val stackExchangeApi = StackExchangeApiMock().apply {
             getTopStackOverflowUsersReturn = listOf(
-                StackOverflowUser("User 1"), StackOverflowUser("User 2")
+                StackOverflowUser("User 1", 1), StackOverflowUser("User 2", 2)
             )
         }
 
@@ -30,7 +30,8 @@ class UserListViewModelTest {
         }
 
         val expected = listOf(
-            UserCardState("", "User 1", 0), UserCardState("", "User 2", 0)
+            UserCardState("", "User 1", 1),
+            UserCardState("", "User 2", 2)
         )
 
         assert(collectedList == expected)

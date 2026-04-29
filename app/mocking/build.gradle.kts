@@ -25,4 +25,5 @@ android {
 
 dependencies {
     implementation(project(":app"))
+    implementation(libs.androidx.core.ktx)
 }

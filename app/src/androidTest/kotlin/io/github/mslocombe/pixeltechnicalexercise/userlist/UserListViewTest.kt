@@ -32,10 +32,12 @@ class UserListViewTest {
                         {
                            "items":[
                               {
-                                 "display_name":"User 1"
+                                 "display_name":"User 1",
+                                 "reputation": 0
                               },
                               {
-                                 "display_name":"User 2"
+                                 "display_name":"User 2",
+                                 "reputation": 0
                               }
                            ]
                         }
