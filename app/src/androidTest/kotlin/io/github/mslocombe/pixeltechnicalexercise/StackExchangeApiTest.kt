@@ -1,7 +1,7 @@
 package io.github.mslocombe.pixeltechnicalexercise
 
-import io.github.mslocombe.pixeltechnicalexercise.endpoint.StackExchangeApiImpl
-import io.github.mslocombe.pixeltechnicalexercise.endpoint.StackOverflowUser
+import io.github.mslocombe.pixeltechnicalexercise.api.StackExchangeApiImpl
+import io.github.mslocombe.pixeltechnicalexercise.api.StackOverflowUser
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpHeaders

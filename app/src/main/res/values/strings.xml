@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Pixel Technical Exercise</string>
+    <string name="follow">Follow</string>
+    <string name="reputation">Reputation: %d</string>
 </resources>

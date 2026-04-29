@@ -1,4 +1,4 @@
-package io.github.mslocombe.pixeltechnicalexercise.endpoint
+package io.github.mslocombe.pixeltechnicalexercise.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
