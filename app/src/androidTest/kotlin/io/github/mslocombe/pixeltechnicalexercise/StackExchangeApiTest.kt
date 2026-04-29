@@ -15,7 +15,7 @@ class StackExchangeApiTest {
 
     @Test
     fun apiReturnsNoResults() = runBlocking {
-        val mockEngine = MockEngine { request ->
+        val mockEngine = MockEngine { _ ->
             respond(
                 content = ByteReadChannel(
                     """
@@ -38,7 +38,7 @@ class StackExchangeApiTest {
 
     @Test
     fun apiReturnsSingleUserRecordMatchingResponse() = runBlocking {
-        val mockEngine = MockEngine { request ->
+        val mockEngine = MockEngine { _ ->
             respond(
                 content = ByteReadChannel(
                     """
@@ -101,7 +101,7 @@ class StackExchangeApiTest {
 
     @Test
     fun apiReturnsManyUserRecords() = runBlocking {
-        val mockEngine = MockEngine { request ->
+        val mockEngine = MockEngine { _ ->
             respond(
                 content = ByteReadChannel(
                     """
@@ -183,5 +183,20 @@ class StackExchangeApiTest {
         assert(users == expected)
     }
 
-    // TODO Not-OK responses return an empty list
+    @Test
+    fun apiReturnsEmptyListForError() = runBlocking {
+        val mockEngine = MockEngine { _ ->
+            respond(
+                content = ByteReadChannel(""),
+                status = HttpStatusCode.NotFound,
+                headers = headersOf(HttpHeaders.ContentType, "application/json")
+            )
+        }
+
+        val api = StackExchangeApiImpl(mockEngine)
+
+        val users = api.getTopUsers("stackoverflow")
+
+        assert(users == emptyList<StackOverflowUser>())
+    }
 }
