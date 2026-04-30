@@ -15,7 +15,7 @@ At the request of "No 3rd party frameworks - we want to see what you can do!":
 
 **:app:mocking module**  
 - I have created my own mocking module which contains easily changable version of each class to aid with testing. (This would normally be achieved using MockK or other mocking libraries)
-- Alongside the mock versions, the app uses depedency injection to allow implementation replacement creating fast, isolated tests, that can be adjusted as required. (Can be achieved with Dagger/Hilt)
+- Alongside the mock versions, the app uses dependency injection to allow implementation replacement creating fast, isolated tests, that can be adjusted as required. (Can be achieved with Dagger/Hilt)
 
 - Asynchronous image requesting is used for profile pictures to reduce the load time (I would normally use Coil for this)
 
