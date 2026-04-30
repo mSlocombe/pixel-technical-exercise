@@ -9,6 +9,7 @@ import androidx.test.core.app.ApplicationProvider
 import io.github.mslocombe.mocking.StackExchangeApiMock
 import io.github.mslocombe.mocking.UserListViewModelMock
 import io.github.mslocombe.mocking.storage.FollowDatastoreMock
+import io.github.mslocombe.pixeltechnicalexercise.api.StackExchangeApiResult
 import io.github.mslocombe.pixeltechnicalexercise.api.StackOverflowUser
 import io.github.mslocombe.pixeltechnicalexercise.storage.FollowDatastoreImpl
 import io.github.mslocombe.pixeltechnicalexercise.ui.components.usercard.UserCardState
@@ -32,7 +33,7 @@ class UserListViewTest {
     @Test
     fun userUnfollowed() = runTest {
         val viewModel = UserListViewModelImpl(
-            StackExchangeApiMock().apply { getTopStackOverflowUsersReturn = singleUserList },
+            StackExchangeApiMock().apply { getTopStackOverflowUsersReturn = StackExchangeApiResult.Success(singleUserList) },
             FollowDatastoreMock().apply { saveFollow(100) }
         )
 
@@ -53,7 +54,7 @@ class UserListViewTest {
 
         val viewModel = UserListViewModelImpl(
             stackExchangeApi = StackExchangeApiMock().apply {
-                getTopStackOverflowUsersReturn = singleUserList
+                getTopStackOverflowUsersReturn = StackExchangeApiResult.Success(singleUserList)
             },
             theDatastore
         )

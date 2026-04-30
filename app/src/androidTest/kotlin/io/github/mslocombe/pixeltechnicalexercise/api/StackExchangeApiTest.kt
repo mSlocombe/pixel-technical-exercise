@@ -31,7 +31,7 @@ class StackExchangeApiTest {
 
         val users = api.getTopStackOverflowUsers()
 
-        assert(users == emptyList<StackOverflowUser>())
+        assert(users == StackExchangeApiResult.Success(emptyList()))
     }
 
     @Test
@@ -81,14 +81,14 @@ class StackExchangeApiTest {
 
         val users = api.getTopStackOverflowUsers()
 
-        val expected = listOf(
+        val expected = StackExchangeApiResult.Success(listOf(
             StackOverflowUser(
                 userId = 22656,
                 name = "Jon Skeet",
                 reputation = 1454978,
                 profilePicture = "https://www.gravatar.com/avatar/6d8ebb117e8d83d74ea95fbdd0f87e13?s=256&d=identicon&r=PG"
             )
-        )
+        ))
 
         assert(
             users == expected
@@ -173,7 +173,7 @@ class StackExchangeApiTest {
 
         val users = api.getTopStackOverflowUsers()
 
-        val expected = listOf(
+        val expected = StackExchangeApiResult.Success(listOf(
             StackOverflowUser(
                 userId = 22656,
                 name = "Jon Skeet",
@@ -185,7 +185,7 @@ class StackExchangeApiTest {
                 reputation = 1369486,
                 profilePicture = "https://i.sstatic.net/I4fiW.jpg?s=256"
             )
-        )
+        ))
 
         assert(users == expected)
     }
@@ -204,6 +204,6 @@ class StackExchangeApiTest {
 
         val users = api.getTopStackOverflowUsers()
 
-        assert(users == emptyList<StackOverflowUser>())
+        assert(users == StackExchangeApiResult.Error)
     }
 }

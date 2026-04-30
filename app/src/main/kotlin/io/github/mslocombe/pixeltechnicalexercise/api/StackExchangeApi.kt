@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface StackExchangeApi {
 
-    suspend fun getTopStackOverflowUsers(): List<StackOverflowUser>
+    suspend fun getTopStackOverflowUsers(): StackExchangeApiResult
 
-    fun getTopStackOverflowUsersFlow(): Flow<List<StackOverflowUser>>
+    fun getTopStackOverflowUsersFlow(): Flow<StackExchangeApiResult>
 }

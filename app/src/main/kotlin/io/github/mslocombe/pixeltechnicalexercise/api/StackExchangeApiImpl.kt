@@ -19,7 +19,7 @@ class StackExchangeApiImpl(
 
     private val httpClient = HttpClient(engine)
 
-    override suspend fun getTopStackOverflowUsers(): List<StackOverflowUser> {
+    override suspend fun getTopStackOverflowUsers(): StackExchangeApiResult {
         return try {
             val response =
                 httpClient.get("https://api.stackexchange.com/2.2/users?page=1&pagesize=20&order=desc&sort=reputation&site=stackoverflow")
@@ -39,18 +39,18 @@ class StackExchangeApiImpl(
                     )
                 )
             }
-            resultList
+            StackExchangeApiResult.Success(resultList)
         } catch(jsonException: JSONException) {
             Log.w(TAG, "getTopStackOverflowUsers: $jsonException")
-            emptyList()
+            StackExchangeApiResult.Error
         } catch (unhandledException: Exception) {
             // General catch allows us to create specific handling for unforeseen exceptions
             Log.w(TAG, "getTopStackOverflowUsers unhandled exception: $unhandledException")
-            emptyList()
+            StackExchangeApiResult.Error
         }
     }
 
-    override fun getTopStackOverflowUsersFlow(): Flow<List<StackOverflowUser>> = flow {
+    override fun getTopStackOverflowUsersFlow(): Flow<StackExchangeApiResult> = flow {
         emit(getTopStackOverflowUsers())
     }
 }
