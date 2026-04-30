@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.StateFlow
 fun UserListScreen(
     viewModel: UserListViewModel = viewModel<UserListViewModelImpl>(factory = UserListViewModelImpl.Factory),
 ) {
-    val cards by viewModel.cards.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { scaffoldPadding ->
         Box(
@@ -35,19 +35,27 @@ fun UserListScreen(
                 .padding(scaffoldPadding)
                 .padding(vertical = 8.dp),
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(cards) { thisCard ->
-                    UserCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        state = thisCard,
-                        onFollow = { viewModel.followUser(thisCard.userId) },
-                        onUnfollow = { viewModel.unfollowUser(thisCard.userId) }
-                    )
+            when (val state = uiState) {
+                is UserListState.Content -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(state.cards) { thisCard ->
+                            UserCard(
+                                modifier = Modifier.fillMaxWidth(),
+                                state = thisCard,
+                                onFollow = { viewModel.followUser(thisCard.userId) },
+                                onUnfollow = { viewModel.unfollowUser(thisCard.userId) }
+                            )
+                        }
+                    }
+                }
+
+                UserListState.Error -> {
+                    ErrorView(Modifier.fillMaxSize())
                 }
             }
         }
@@ -59,10 +67,12 @@ fun UserListScreen(
 private fun Preview_UserListScreen() {
     val viewModel = remember {
         object : UserListViewModel {
-            override val cards: StateFlow<List<UserCardState>>
+            override val uiState: StateFlow<UserListState>
                 get() = MutableStateFlow(
-                    listOf(
-                        UserCardState(1, "", "User 1", 0, false)
+                    UserListState.Content(
+                        listOf(
+                            UserCardState(1, "", "User 1", 0, false)
+                        )
                     )
                 )
 

@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlin.collections.emptyList
 
 class UserListViewModelImpl(
     stackExchangeApi: StackExchangeApi,
@@ -27,26 +26,32 @@ class UserListViewModelImpl(
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main.immediate + SupervisorJob())
 ) : UserListViewModel, ViewModel(coroutineScope) {
 
-    override val cards = combine(
+    override val uiState = combine(
         stackExchangeApi.getTopStackOverflowUsersFlow(),
         followingDatastore.getFollows()
     ) { apiResult, followedIds ->
-        if(apiResult is StackExchangeApiResult.Success) {
-            val followIdInts = followedIds.map { it.toInt() }
-            apiResult.users.map { user ->
-                UserCardState(
-                    user.userId,
-                    user.profilePicture,
-                    user.name,
-                    user.reputation,
-                    followIdInts.contains(user.userId)
-                )
+        when(apiResult) {
+            is StackExchangeApiResult.Success -> {
+                val followIdInts = followedIds.map { it.toInt() }
+                val cards = apiResult.users.map { user ->
+                    UserCardState(
+                        user.userId,
+                        user.profilePicture,
+                        user.name,
+                        user.reputation,
+                        followIdInts.contains(user.userId)
+                    )
+                }
+                UserListState.Content(cards)
             }
-        } else emptyList()
+            is StackExchangeApiResult.Error -> {
+                UserListState.Error
+            }
+        }
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
-        emptyList()
+        UserListState.Content(emptyList())
     )
 
     override fun followUser(userId: Int) {

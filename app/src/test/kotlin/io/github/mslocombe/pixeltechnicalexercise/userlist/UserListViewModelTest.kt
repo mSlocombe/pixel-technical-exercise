@@ -15,12 +15,35 @@ class UserListViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
+    fun stackExchangeErrorResultsInErrorState() = runTest(UnconfinedTestDispatcher()) {
+        val viewModel = UserListViewModelImpl(
+            StackExchangeApiMock().apply {
+                getTopStackOverflowUsersReturn = StackExchangeApiResult.Error
+            },
+            FollowDatastoreMock(),
+            backgroundScope
+        )
+
+        var collectedState: UserListState? = null
+        backgroundScope.launch {
+            viewModel.uiState.collect {
+                collectedState = it
+            }
+        }
+
+        assert(collectedState == UserListState.Error)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
     fun stackOverflowUsersTranslatedToUserCards() = runTest(UnconfinedTestDispatcher()) {
         val stackExchangeApi = StackExchangeApiMock().apply {
-            getTopStackOverflowUsersReturn = StackExchangeApiResult.Success(listOf(
-                StackOverflowUser(1, "User 1", 1, ""),
-                StackOverflowUser(2, "User 2", 2, "")
-            ))
+            getTopStackOverflowUsersReturn = StackExchangeApiResult.Success(
+                listOf(
+                    StackOverflowUser(1, "User 1", 1, ""),
+                    StackOverflowUser(2, "User 2", 2, "")
+                )
+            )
         }
 
         val viewModel = UserListViewModelImpl(
@@ -29,17 +52,17 @@ class UserListViewModelTest {
             backgroundScope
         )
 
-        var collectedList: List<UserCardState>? = null
+        var collectedList: UserListState? = null
         backgroundScope.launch {
-            viewModel.cards.collect {
+            viewModel.uiState.collect {
                 collectedList = it
             }
         }
 
-        val expected = listOf(
+        val expected = UserListState.Content(listOf(
             UserCardState(1, "", "User 1", 1, false),
             UserCardState(2, "", "User 2", 2, false)
-        )
+        ))
 
         assert(collectedList == expected) {
             collectedList.toString()

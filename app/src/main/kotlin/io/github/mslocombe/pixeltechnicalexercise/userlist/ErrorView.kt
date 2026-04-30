@@ -17,7 +17,7 @@ import io.github.mslocombe.pixeltechnicalexercise.ui.theme.PixelTechnicalExercis
 
 @Composable
 fun ErrorView(modifier: Modifier = Modifier) {
-    Box(modifier.testTag("ErrorView"), contentAlignment = Alignment.Center) {
+    Box(modifier.testTag("UserListError"), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painter = painterResource(R.drawable.ic_load_error),
