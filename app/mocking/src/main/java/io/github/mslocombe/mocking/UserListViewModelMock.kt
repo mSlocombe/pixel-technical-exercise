@@ -11,4 +11,8 @@ class UserListViewModelMock(
 
     private val _cards = MutableStateFlow(initialCards)
     override val cards = _cards.asStateFlow()
+
+    override fun followUser(userId: Int) {
+
+    }
 }

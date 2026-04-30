@@ -1,42 +1,64 @@
 package io.github.mslocombe.pixeltechnicalexercise.userlist
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import io.github.mslocombe.pixeltechnicalexercise.api.StackExchangeApi
 import io.github.mslocombe.pixeltechnicalexercise.api.StackExchangeApiImpl
+import io.github.mslocombe.pixeltechnicalexercise.storage.FollowDatastore
+import io.github.mslocombe.pixeltechnicalexercise.storage.FollowDatastoreImpl
 import io.github.mslocombe.pixeltechnicalexercise.ui.components.usercard.UserCardState
 import io.ktor.client.engine.okhttp.OkHttp
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class UserListViewModelImpl(
-    stackExchangeApi: StackExchangeApi
-) : UserListViewModel, ViewModel() {
+    stackExchangeApi: StackExchangeApi,
+    private val followingDatastore: FollowDatastore,
+    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main.immediate + SupervisorJob())
+) : UserListViewModel, ViewModel(coroutineScope) {
 
-    private val _cards = MutableStateFlow<List<UserCardState>>(emptyList())
-    override val cards = _cards.asStateFlow()
+    override val cards = combine(
+        stackExchangeApi.getTopStackOverflowUsersFlow(),
+        followingDatastore.getFollows()
+    ) { users, followedIds ->
+        val followIdInts = followedIds.map { it.toInt() }
+        users.map { user ->
+            UserCardState(
+                user.userId,
+                user.profilePicture,
+                user.name,
+                user.reputation,
+                followIdInts.contains(user.userId)
+            )
+        }
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        emptyList()
+    )
 
-    init {
+    override fun followUser(userId: Int) {
         viewModelScope.launch {
-            _cards.update {
-                stackExchangeApi.getTopStackOverflowUsers().map { user ->
-                    UserCardState(
-                        "", user.name, user.reputation
-                    )
-                }
-            }
+            followingDatastore.saveFollow(userId)
         }
     }
 
     companion object {
         val Factory = viewModelFactory {
             initializer {
+                val applicationContext = this[APPLICATION_KEY]!!.applicationContext
+
                 UserListViewModelImpl(
-                    StackExchangeApiImpl(OkHttp.create())
+                    StackExchangeApiImpl(OkHttp.create()),
+                    FollowDatastoreImpl(applicationContext)
                 )
             }
         }

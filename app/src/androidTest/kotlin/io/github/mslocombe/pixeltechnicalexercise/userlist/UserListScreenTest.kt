@@ -18,7 +18,7 @@ class UserListScreenTest {
         val viewModel = UserListViewModelMock(
             listOf(
                 UserCardState(
-                    "", "name", 1
+                    1, "", "name", 1, false
                 )
             )
         )

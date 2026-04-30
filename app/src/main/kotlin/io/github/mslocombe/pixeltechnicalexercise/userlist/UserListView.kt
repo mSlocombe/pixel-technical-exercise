@@ -1,5 +1,6 @@
 package io.github.mslocombe.pixeltechnicalexercise.userlist
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,9 +24,8 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun UserListScreen(
-    viewModel: UserListViewModel = viewModel<UserListViewModelImpl>(factory = UserListViewModelImpl.Factory)
+    viewModel: UserListViewModel = viewModel<UserListViewModelImpl>(factory = UserListViewModelImpl.Factory),
 ) {
-
     val cards by viewModel.cards.collectAsStateWithLifecycle()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { scaffoldPadding ->
@@ -35,15 +35,17 @@ fun UserListScreen(
                 .padding(scaffoldPadding)
                 .padding(vertical = 8.dp),
         ) {
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 items(cards) { thisCard ->
                     UserCard(
                         modifier = Modifier.fillMaxWidth(),
-                        state = UserCardState(
-                            profilePictureUrl = "https://www.gravatar.com/avatar/6d8ebb117e8d83d74ea95fbdd0f87e13?s=256&d=identicon&r=PG",
-                            name = thisCard.name,
-                            reputation = thisCard.reputation
-                        )
+                        state = thisCard,
+                        onFollow = { viewModel.followUser(thisCard.userId) }
                     )
                 }
             }
@@ -59,15 +61,19 @@ private fun Preview_UserListScreen() {
             override val cards: StateFlow<List<UserCardState>>
                 get() = MutableStateFlow(
                     listOf(
-                        UserCardState("", "User 1", 0)
+                        UserCardState(1, "", "User 1", 0, false)
                     )
                 )
+
+            override fun followUser(userId: Int) {
+
+            }
         }
     }
 
     PixelTechnicalExerciseTheme {
         UserListScreen(
-            viewModel
+            viewModel = viewModel
         )
     }
 }

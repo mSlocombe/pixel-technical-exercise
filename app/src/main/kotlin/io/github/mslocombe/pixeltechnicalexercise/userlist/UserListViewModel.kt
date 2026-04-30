@@ -6,4 +6,6 @@ import kotlinx.coroutines.flow.StateFlow
 interface UserListViewModel {
 
     val cards: StateFlow<List<UserCardState>>
+
+    fun followUser(userId: Int)
 }

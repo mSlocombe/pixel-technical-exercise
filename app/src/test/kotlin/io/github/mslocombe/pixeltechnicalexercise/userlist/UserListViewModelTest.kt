@@ -1,6 +1,7 @@
 package io.github.mslocombe.pixeltechnicalexercise.userlist
 
 import io.github.mslocombe.mocking.StackExchangeApiMock
+import io.github.mslocombe.mocking.storage.FollowDatastoreMock
 import io.github.mslocombe.pixeltechnicalexercise.api.StackOverflowUser
 import io.github.mslocombe.pixeltechnicalexercise.ui.components.usercard.UserCardState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -13,27 +14,34 @@ class UserListViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun stackOverflowUsersTranslatedToUserCards() = runTest {
+    fun stackOverflowUsersTranslatedToUserCards() = runTest(UnconfinedTestDispatcher()) {
         val stackExchangeApi = StackExchangeApiMock().apply {
             getTopStackOverflowUsersReturn = listOf(
-                StackOverflowUser("User 1", 1), StackOverflowUser("User 2", 2)
+                StackOverflowUser(1, "User 1", 1, ""),
+                StackOverflowUser(2, "User 2", 2, "")
             )
         }
 
-        val viewModel = UserListViewModelImpl(stackExchangeApi)
+        val viewModel = UserListViewModelImpl(
+            stackExchangeApi,
+            FollowDatastoreMock(),
+            backgroundScope
+        )
 
         var collectedList: List<UserCardState>? = null
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+        backgroundScope.launch {
             viewModel.cards.collect {
                 collectedList = it
             }
         }
 
         val expected = listOf(
-            UserCardState("", "User 1", 1),
-            UserCardState("", "User 2", 2)
+            UserCardState(1, "", "User 1", 1, false),
+            UserCardState(2, "", "User 2", 2, false)
         )
 
-        assert(collectedList == expected)
+        assert(collectedList == expected) {
+            collectedList.toString()
+        }
     }
 }

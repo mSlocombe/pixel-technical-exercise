@@ -1,6 +1,8 @@
 package io.github.mslocombe.pixeltechnicalexercise.ui.components
 
-import android.graphics.BitmapFactory
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,12 +15,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.okhttp.OkHttp
-import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsBytes
+import io.github.mslocombe.pixeltechnicalexercise.utils.AsyncImageLoader
 
 @Composable
 fun AsyncImage(
@@ -28,26 +26,25 @@ fun AsyncImage(
     var localBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
 
     LaunchedEffect(url) {
-        localBitmap = try {
-            HttpClient(OkHttp).use { localClient ->
-                val bytes = localClient.get(url).bodyAsBytes()
-                BitmapFactory.decodeByteArray(bytes, 0, bytes.size).asImageBitmap()
-            }
-        } catch (_: Exception) {
-            null
-        }
+        localBitmap = AsyncImageLoader.loadImage(url)
     }
 
     Box(
         modifier = modifier, contentAlignment = Alignment.Center
     ) {
-        localBitmap?.let { theBitmap ->
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                bitmap = theBitmap,
-                contentScale = ContentScale.Fit,
-                contentDescription = null
-            )
+        AnimatedVisibility(
+            localBitmap != null,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            localBitmap?.let { theBitmap ->
+                Image(
+                    modifier = Modifier.fillMaxSize(),
+                    bitmap = theBitmap,
+                    contentScale = ContentScale.Fit,
+                    contentDescription = null
+                )
+            }
         }
     }
 }

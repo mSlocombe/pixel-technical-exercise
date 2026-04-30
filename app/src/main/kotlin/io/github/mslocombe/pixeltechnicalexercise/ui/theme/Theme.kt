@@ -14,13 +14,15 @@ import androidx.compose.ui.platform.LocalContext
 private val DarkColorScheme = darkColorScheme(
     primary = Color(0xFF4353FF),
     secondary = Color(0xFF6C757D),
-    background = Color(0xFF202020)
+    background = Color(0xFFCCCCCC),
+    primaryContainer = Color(0xFF4353FF)
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Color(0xFF4353FF),
     secondary = Color(0xFF6C757D),
-    background = Color(0xFF202020)
+    background = Color(0xFFCCCCCC),
+    primaryContainer = Color(0xFF4353FF)
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -37,7 +39,7 @@ private val LightColorScheme = lightColorScheme(
 fun PixelTechnicalExerciseTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

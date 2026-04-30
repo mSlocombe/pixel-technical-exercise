@@ -83,8 +83,10 @@ class StackExchangeApiTest {
 
         val expected = listOf(
             StackOverflowUser(
+                userId = 22656,
                 name = "Jon Skeet",
-                reputation = 1454978
+                reputation = 1454978,
+                profilePicture = "https://www.gravatar.com/avatar/6d8ebb117e8d83d74ea95fbdd0f87e13?s=256&d=identicon&r=PG"
             )
         )
 
@@ -173,11 +175,15 @@ class StackExchangeApiTest {
 
         val expected = listOf(
             StackOverflowUser(
+                userId = 22656,
                 name = "Jon Skeet",
-                reputation = 1526592
+                reputation = 1526592,
+                profilePicture = "https://www.gravatar.com/avatar/6d8ebb117e8d83d74ea95fbdd0f87e13?s=256&d=identicon&r=PG"
             ), StackOverflowUser(
+                userId = 6309,
                 name = "VonC",
-                reputation = 1369486
+                reputation = 1369486,
+                profilePicture = "https://i.sstatic.net/I4fiW.jpg?s=256"
             )
         )
 

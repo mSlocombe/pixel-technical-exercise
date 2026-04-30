@@ -4,6 +4,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.json.JSONObject
 
 class StackExchangeApiImpl(
@@ -25,8 +27,10 @@ class StackExchangeApiImpl(
                 val thisItem = items.getJSONObject(index)
                 resultList.add(
                     StackOverflowUser(
+                        userId = thisItem.getInt("user_id"),
                         name = thisItem.getString("display_name"),
-                        reputation = thisItem.getInt("reputation")
+                        reputation = thisItem.getInt("reputation"),
+                        profilePicture = thisItem.getString("profile_image")
                     )
                 )
             }
@@ -34,5 +38,9 @@ class StackExchangeApiImpl(
         } catch (_: Exception) { // TODO specify exception types
             emptyList()
         }
+    }
+
+    override fun getTopStackOverflowUsersFlow(): Flow<List<StackOverflowUser>> = flow {
+        emit(getTopStackOverflowUsers())
     }
 }

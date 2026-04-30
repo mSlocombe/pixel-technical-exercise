@@ -52,7 +52,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
-    // ktor
+    // datastore (for follow persistence)
+    implementation(libs.androidx.datastore.preferences)
+
+    // ktor (for networking)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)
 
