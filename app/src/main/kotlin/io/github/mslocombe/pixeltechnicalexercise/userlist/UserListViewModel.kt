@@ -8,4 +8,5 @@ interface UserListViewModel {
     val cards: StateFlow<List<UserCardState>>
 
     fun followUser(userId: Int)
+    fun unfollowUser(userId: Int)
 }

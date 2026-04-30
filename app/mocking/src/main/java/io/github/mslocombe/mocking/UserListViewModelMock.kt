@@ -15,4 +15,8 @@ class UserListViewModelMock(
     override fun followUser(userId: Int) {
 
     }
+
+    override fun unfollowUser(userId: Int) {
+
+    }
 }

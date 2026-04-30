@@ -16,25 +16,42 @@ class FollowButtonTest {
     @Composable
     private fun TestFollowButton(
         isFollowed: Boolean = false,
-        onClick: () -> Unit = {}
+        onFollow: () -> Unit = {},
+        onUnfollow: () -> Unit = {}
     ) {
         FollowButton(
             isFollowed = isFollowed,
-            onClick = onClick
+            onFollow = onFollow,
+            onUnfollow = onUnfollow
         )
     }
 
     @Test
-    fun buttonClickEventReceived() {
-        var clicked = false
+    fun buttonUnfollowEventReceived() {
+        var eventReceived = false
         compose.setContent {
             TestFollowButton(
-                onClick = { clicked = true }
+                isFollowed = true,
+                onUnfollow = { eventReceived = true }
+            )
+        }
+
+        compose.onNodeWithText("Unfollow").performClick()
+        assert(eventReceived)
+    }
+
+    @Test
+    fun buttonFollowEventReceived() {
+        var eventReceived = false
+        compose.setContent {
+            TestFollowButton(
+                isFollowed = false,
+                onFollow = { eventReceived = true }
             )
         }
 
         compose.onNodeWithText("Follow").performClick()
-        assert(clicked)
+        assert(eventReceived)
     }
 
     @Test

@@ -8,6 +8,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.core.app.ApplicationProvider
 import io.github.mslocombe.mocking.StackExchangeApiMock
 import io.github.mslocombe.mocking.UserListViewModelMock
+import io.github.mslocombe.mocking.storage.FollowDatastoreMock
 import io.github.mslocombe.pixeltechnicalexercise.api.StackOverflowUser
 import io.github.mslocombe.pixeltechnicalexercise.storage.FollowDatastoreImpl
 import io.github.mslocombe.pixeltechnicalexercise.ui.components.usercard.UserCardState
@@ -24,7 +25,24 @@ class UserListViewTest {
     @get:Rule
     val compose = createComposeRule()
 
+    private val singleUserList = listOf(StackOverflowUser(100, "", 0, ""))
+
     // TODO No content - error
+
+    @Test
+    fun userUnfollowed() = runTest {
+        val viewModel = UserListViewModelImpl(
+            StackExchangeApiMock().apply { getTopStackOverflowUsersReturn = singleUserList },
+            FollowDatastoreMock().apply { saveFollow(100) }
+        )
+
+        compose.setContent {
+            UserListScreen(viewModel)
+        }
+
+        compose.onNodeWithText("Unfollow").performClick()
+        compose.onNodeWithText("Follow").assertIsDisplayed()
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
@@ -35,7 +53,7 @@ class UserListViewTest {
 
         val viewModel = UserListViewModelImpl(
             stackExchangeApi = StackExchangeApiMock().apply {
-                getTopStackOverflowUsersReturn = listOf(StackOverflowUser(100, "", 0, ""))
+                getTopStackOverflowUsersReturn = singleUserList
             },
             theDatastore
         )

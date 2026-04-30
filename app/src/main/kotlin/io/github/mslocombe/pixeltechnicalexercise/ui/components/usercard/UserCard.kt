@@ -30,7 +30,10 @@ import io.github.mslocombe.pixeltechnicalexercise.ui.theme.PixelTechnicalExercis
 
 @Composable
 fun UserCard(
-    modifier: Modifier = Modifier, state: UserCardState, onFollow: () -> Unit
+    modifier: Modifier = Modifier,
+    state: UserCardState,
+    onFollow: () -> Unit,
+    onUnfollow: () -> Unit
 ) {
     Row(
         modifier
@@ -48,7 +51,9 @@ fun UserCard(
         }
         FollowButton(
             isFollowed = state.isFollowed,
-            onClick = { onFollow() })
+            onFollow = { onFollow() },
+            onUnfollow = { onUnfollow() }
+        )
     }
 }
 
@@ -92,6 +97,7 @@ private fun Preview_UserCard() {
                 .fillMaxWidth()
                 .height(160.dp), state = UserCardState(userId = 1,
                 profilePictureUrl = "", name = "Jane Doe", reputation = 9000, false
-            ), onFollow = {})
+            ), onFollow = {},
+            onUnfollow = {})
     }
 }

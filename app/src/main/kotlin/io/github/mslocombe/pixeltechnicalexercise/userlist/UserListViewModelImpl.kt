@@ -29,6 +29,7 @@ class UserListViewModelImpl(
         stackExchangeApi.getTopStackOverflowUsersFlow(),
         followingDatastore.getFollows()
     ) { users, followedIds ->
+
         val followIdInts = followedIds.map { it.toInt() }
         users.map { user ->
             UserCardState(
@@ -48,6 +49,12 @@ class UserListViewModelImpl(
     override fun followUser(userId: Int) {
         viewModelScope.launch {
             followingDatastore.saveFollow(userId)
+        }
+    }
+
+    override fun unfollowUser(userId: Int) {
+        viewModelScope.launch {
+            followingDatastore.removeFollow(userId)
         }
     }
 

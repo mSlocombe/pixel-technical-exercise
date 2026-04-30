@@ -7,4 +7,5 @@ interface FollowDatastore {
     suspend fun saveFollow(userId: Int)
 
     fun getFollows(): Flow<Set<String>>
+    suspend fun removeFollow(userId: Int)
 }

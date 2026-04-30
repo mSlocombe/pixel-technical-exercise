@@ -45,7 +45,8 @@ fun UserListScreen(
                     UserCard(
                         modifier = Modifier.fillMaxWidth(),
                         state = thisCard,
-                        onFollow = { viewModel.followUser(thisCard.userId) }
+                        onFollow = { viewModel.followUser(thisCard.userId) },
+                        onUnfollow = { viewModel.unfollowUser(thisCard.userId) }
                     )
                 }
             }
@@ -66,6 +67,10 @@ private fun Preview_UserListScreen() {
                 )
 
             override fun followUser(userId: Int) {
+
+            }
+
+            override fun unfollowUser(userId: Int) {
 
             }
         }
