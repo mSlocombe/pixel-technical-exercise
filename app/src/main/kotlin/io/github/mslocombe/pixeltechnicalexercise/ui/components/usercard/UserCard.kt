@@ -75,7 +75,7 @@ private fun NameLabel(name: String) {
 private fun ReputationLabel(reputation: Int) {
     Text(
         text = stringResource(R.string.reputation, reputation),
-        style = MaterialTheme.typography.labelMedium.copy(
+        style = MaterialTheme.typography.labelSmall.copy(
             color = MaterialTheme.colorScheme.secondary
         ),
         maxLines = 1,

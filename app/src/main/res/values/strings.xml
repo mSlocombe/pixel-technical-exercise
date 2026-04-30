@@ -3,4 +3,5 @@
     <string name="follow">Follow</string>
     <string name="reputation">Reputation: %d</string>
     <string name="request_error">Something went wrong!</string>
+    <string name="unfollow">Unfollow</string>
 </resources>

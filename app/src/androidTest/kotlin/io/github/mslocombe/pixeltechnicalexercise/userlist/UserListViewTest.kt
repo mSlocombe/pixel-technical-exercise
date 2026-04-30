@@ -7,17 +7,10 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.core.app.ApplicationProvider
 import io.github.mslocombe.mocking.StackExchangeApiMock
-import io.github.mslocombe.mocking.storage.FollowDatastoreMock
-import io.github.mslocombe.pixeltechnicalexercise.api.StackExchangeApiImpl
+import io.github.mslocombe.mocking.UserListViewModelMock
 import io.github.mslocombe.pixeltechnicalexercise.api.StackOverflowUser
-import io.github.mslocombe.pixeltechnicalexercise.api.mockStackExchangeResponse
 import io.github.mslocombe.pixeltechnicalexercise.storage.FollowDatastoreImpl
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.respond
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
-import io.ktor.utils.io.ByteReadChannel
+import io.github.mslocombe.pixeltechnicalexercise.ui.components.usercard.UserCardState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -56,27 +49,18 @@ class UserListViewTest {
         compose.onNodeWithText("Follow").performClick()
 
         val storedData = theDatastore.getFollows().first()
-        assert(storedData == setOf("100"))
+        assert(storedData == setOf("100")) {
+            storedData.toString()
+        }
     }
 
     @Test
     fun listViewDisplaysGivenCards() = runTest {
-        // given
-        // HttpClient - make request for top users
-        val mockEngine = MockEngine { _ ->
-            respond(
-                content = ByteReadChannel(mockStackExchangeResponse),
-                status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, "application/json")
+        val viewModel = UserListViewModelMock(
+            initialCards = listOf(
+                UserCardState(1, "", "Jon Skeet", 0, false)
             )
-        }
-
-        // when
-        // Repository - translate to StackOverflowUsers
-        val stackExchangeApi = StackExchangeApiImpl(mockEngine)
-
-        // viewModel - Translate to UserCardState
-        val viewModel = UserListViewModelImpl(stackExchangeApi, FollowDatastoreMock()) // Provide mock datastore
+        )
 
         // view -> display
         compose.setContent {

@@ -38,9 +38,22 @@ class FollowButtonTest {
     }
 
     @Test
-    fun buttonDisplaysFollowLabel() {
+    fun buttonDisplaysUnfollowWhenFollowed() {
         compose.setContent {
-            TestFollowButton()
+            TestFollowButton(
+                isFollowed = true
+            )
+        }
+
+        compose.onNodeWithText("Unfollow").assertIsDisplayed()
+    }
+
+    @Test
+    fun buttonDisplaysFollowWhenNotFollowed() {
+        compose.setContent {
+            TestFollowButton(
+                isFollowed = false
+            )
         }
 
         compose.onNodeWithText("Follow").assertIsDisplayed()
