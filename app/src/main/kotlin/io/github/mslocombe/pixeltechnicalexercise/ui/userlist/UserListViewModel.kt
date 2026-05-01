@@ -1,4 +1,4 @@
-package io.github.mslocombe.pixeltechnicalexercise.userlist
+package io.github.mslocombe.pixeltechnicalexercise.ui.userlist
 
 import kotlinx.coroutines.flow.StateFlow
 

@@ -5,6 +5,8 @@ import io.github.mslocombe.mocking.storage.FollowDatastoreMock
 import io.github.mslocombe.pixeltechnicalexercise.api.StackExchangeApiResult
 import io.github.mslocombe.pixeltechnicalexercise.api.StackOverflowUser
 import io.github.mslocombe.pixeltechnicalexercise.ui.components.usercard.UserCardState
+import io.github.mslocombe.pixeltechnicalexercise.ui.userlist.UserListState
+import io.github.mslocombe.pixeltechnicalexercise.ui.userlist.UserListViewModelImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

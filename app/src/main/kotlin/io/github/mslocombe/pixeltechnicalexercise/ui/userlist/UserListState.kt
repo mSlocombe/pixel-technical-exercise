@@ -1,4 +1,4 @@
-package io.github.mslocombe.pixeltechnicalexercise.userlist
+package io.github.mslocombe.pixeltechnicalexercise.ui.userlist
 
 import io.github.mslocombe.pixeltechnicalexercise.ui.components.usercard.UserCardState
 

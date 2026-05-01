@@ -41,11 +41,11 @@ class StackExchangeApiImpl(
             }
             StackExchangeApiResult.Success(resultList)
         } catch(jsonException: JSONException) {
-            Log.w(TAG, "getTopStackOverflowUsers: $jsonException")
+            Log.e(TAG, "getTopStackOverflowUsers: $jsonException")
             StackExchangeApiResult.Error
         } catch (unhandledException: Exception) {
             // General catch allows us to create specific handling for unforeseen exceptions
-            Log.w(TAG, "getTopStackOverflowUsers unhandled exception: $unhandledException")
+            Log.e(TAG, "getTopStackOverflowUsers unhandled exception: $unhandledException")
             StackExchangeApiResult.Error
         }
     }

@@ -1,4 +1,4 @@
-package io.github.mslocombe.pixeltechnicalexercise.userlist
+package io.github.mslocombe.pixeltechnicalexercise.ui.userlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY

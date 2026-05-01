@@ -1,7 +1,7 @@
 package io.github.mslocombe.mocking
 
-import io.github.mslocombe.pixeltechnicalexercise.userlist.UserListState
-import io.github.mslocombe.pixeltechnicalexercise.userlist.UserListViewModel
+import io.github.mslocombe.pixeltechnicalexercise.ui.userlist.UserListState
+import io.github.mslocombe.pixeltechnicalexercise.ui.userlist.UserListViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class UserListViewModelMock(

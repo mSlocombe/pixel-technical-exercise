@@ -1,9 +1,10 @@
-package io.github.mslocombe.pixeltechnicalexercise.userlist
+package io.github.mslocombe.pixeltechnicalexercise.ui.userlist
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,7 +25,8 @@ fun ErrorView(modifier: Modifier = Modifier) {
                 contentDescription = null
             )
             Text(
-                text = stringResource(R.string.request_error)
+                text = stringResource(R.string.request_error),
+                style = MaterialTheme.typography.labelLarge
             )
         }
     }
