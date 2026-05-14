@@ -36,6 +36,7 @@ fun UserListScreen(
                 .padding(vertical = 8.dp),
         ) {
             when (val state = uiState) {
+                is UserListState.Loading -> { /* No UI Needed*/ }
                 is UserListState.Content -> {
                     LazyColumn(
                         modifier = Modifier

@@ -5,6 +5,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.json.JSONException
@@ -44,6 +46,7 @@ class StackExchangeApiImpl(
             Log.e(TAG, "getTopStackOverflowUsers: $jsonException")
             StackExchangeApiResult.Error
         } catch (unhandledException: Exception) {
+            currentCoroutineContext().ensureActive()
             // General catch allows us to create specific handling for unforeseen exceptions
             Log.e(TAG, "getTopStackOverflowUsers unhandled exception: $unhandledException")
             StackExchangeApiResult.Error

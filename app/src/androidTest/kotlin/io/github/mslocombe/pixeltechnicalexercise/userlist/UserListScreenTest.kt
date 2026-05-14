@@ -6,6 +6,9 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.test.core.app.ApplicationProvider
 import io.github.mslocombe.mocking.StackExchangeApiMock
 import io.github.mslocombe.mocking.UserListViewModelMock
@@ -17,12 +20,20 @@ import io.github.mslocombe.pixeltechnicalexercise.ui.components.usercard.UserCar
 import io.github.mslocombe.pixeltechnicalexercise.ui.userlist.UserListScreen
 import io.github.mslocombe.pixeltechnicalexercise.ui.userlist.UserListState
 import io.github.mslocombe.pixeltechnicalexercise.ui.userlist.UserListViewModelImpl
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
+
+@OptIn(ExperimentalCoroutinesApi::class)
+val datastoreScope = UnconfinedTestDispatcher()
+private val Context.testDatastore: DataStore<Preferences> by preferencesDataStore(
+    name = "UserListScreenTestDatastore",
+    scope = CoroutineScope(datastoreScope)
+)
 
 class UserListScreenTest {
 
@@ -65,9 +76,8 @@ class UserListScreenTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun userFollowFromClickToDatastore() = runTest(UnconfinedTestDispatcher()) {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-
-        val theDatastore = FollowDatastoreImpl(context, this)
+        val appContext = ApplicationProvider.getApplicationContext<Context>()
+        val theDatastore = FollowDatastoreImpl(appContext.testDatastore)
 
         val viewModel = UserListViewModelImpl(
             stackExchangeApi = StackExchangeApiMock().apply {

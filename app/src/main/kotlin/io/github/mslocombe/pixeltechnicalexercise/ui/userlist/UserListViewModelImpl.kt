@@ -10,8 +10,10 @@ import io.github.mslocombe.pixeltechnicalexercise.api.StackExchangeApiImpl
 import io.github.mslocombe.pixeltechnicalexercise.api.StackExchangeApiResult
 import io.github.mslocombe.pixeltechnicalexercise.storage.FollowDatastore
 import io.github.mslocombe.pixeltechnicalexercise.storage.FollowDatastoreImpl
+import io.github.mslocombe.pixeltechnicalexercise.storage.dataStore
 import io.github.mslocombe.pixeltechnicalexercise.ui.components.usercard.UserCardState
 import io.ktor.client.engine.okhttp.OkHttp
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -19,31 +21,36 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class UserListViewModelImpl(
     stackExchangeApi: StackExchangeApi,
     private val followingDatastore: FollowDatastore,
-    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main.immediate + SupervisorJob())
+    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main.immediate + SupervisorJob()),
+    defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : UserListViewModel, ViewModel(coroutineScope) {
 
     override val uiState = combine(
         stackExchangeApi.getTopStackOverflowUsersFlow(),
         followingDatastore.getFollows()
     ) { apiResult, followedIds ->
-        when(apiResult) {
+        when (apiResult) {
             is StackExchangeApiResult.Success -> {
-                val followIdInts = followedIds.map { it.toInt() }
-                val cards = apiResult.users.map { user ->
-                    UserCardState(
-                        user.userId,
-                        user.profilePicture,
-                        user.name,
-                        user.reputation,
-                        followIdInts.contains(user.userId)
-                    )
+                val userCards = withContext(defaultDispatcher) {
+                    val followIdInts = followedIds.map { it.toInt() }
+                    apiResult.users.map { user ->
+                        UserCardState(
+                            user.userId,
+                            user.profilePicture,
+                            user.name,
+                            user.reputation,
+                            followIdInts.contains(user.userId)
+                        )
+                    }
                 }
-                UserListState.Content(cards)
+                UserListState.Content(userCards)
             }
+
             is StackExchangeApiResult.Error -> {
                 UserListState.Error
             }
@@ -51,7 +58,7 @@ class UserListViewModelImpl(
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
-        UserListState.Content(emptyList())
+        UserListState.Loading
     )
 
     override fun followUser(userId: Int) {
@@ -73,7 +80,7 @@ class UserListViewModelImpl(
 
                 UserListViewModelImpl(
                     StackExchangeApiImpl(OkHttp.create()),
-                    FollowDatastoreImpl(applicationContext)
+                    FollowDatastoreImpl(applicationContext.dataStore)
                 )
             }
         }
